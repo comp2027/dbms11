@@ -1,0 +1,67 @@
+CREATE TABLE BOOK(
+    Book_ISBN VARCHAR(13) PRIMARY KEY,
+    Title VARCHAR(100) NOT NULL,
+    Publisher_Name VARCHAR(200),
+    Price DECIMAL(10,2) CHECK (Price > 0),
+    Date_Of_Publication DATE,
+    Book_Copy INT
+);
+
+CREATE TABLE BOOK_AUTHOR(
+    Book_ISBN VARCHAR(13),
+    Author_Name VARCHAR(20),
+    Author_City VARCHAR(20),
+    PRIMARY KEY(Book_ISBN, Author_Name),
+    FOREIGN KEY(Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+
+INSERT INTO BOOK VALUES
+('ISBN001', 'Database Systems', 'Pearson', 550, '2014-02-10', 5),
+('ISBN002', 'Operating Systems', 'McGrawHill', 650, '2016-05-22', 3),
+('ISBN003', 'Networking Basics', 'Pearson', 450, '2020-01-10', 2),
+('ISBN004', 'Java Programming', 'Wiley', 700, '2018-03-15', 4);
+
+INSERT INTO BOOK_AUTHORS VALUES
+('ISBN001', 'Kumar S', 'Pune'),
+('ISBN001', 'Anita P', 'Delhi'),
+('ISBN002', 'Ketan J', 'Mumbai'),
+('ISBN003', 'Rohit K', 'Pune'),
+('ISBN004', 'Kavita M', 'Bangalore'),
+('ISBN004', 'Arjun S', 'Pune'),
+('ISBN004', 'Karan L', 'Delhi');
+
+SELECT Publisher_Name, COUNT(*) AS Total_Books
+FROM BOOK
+GROUP BY Publisher_Name
+ORDER BY Total_Books ASC;
+
+SELECT DISTINCT B.Publisher_Name
+FROM BOOK B
+JOIN BOOK_AUTHORS A ON B.Book_ISBN = A.Book_ISBN
+WHERE A.Author_Name LIKE 'K%';
+
+SELECT B.Title, A.Author_Name
+FROM BOOK B
+JOIN BOOK_AUTHORS A ON B.Book_ISBN = A.Book_ISBN
+WHERE B.Book_ISBN IN (
+      SELECT Book_ISBN
+      FROM BOOK_AUTHORS
+      GROUP BY Book_ISBN
+      HAVING COUNT(*) = (
+            SELECT MAX(author_count)
+            FROM (
+                  SELECT COUNT(*) AS author_count
+                  FROM BOOK_AUTHORS
+                  GROUP BY Book_ISBN
+            ) x
+      )
+);
+
+SELECT Publisher_Name
+FROM BOOK
+ORDER BY Title ASC;
+
+SELECT COUNT(*) AS Books_Published
+FROM BOOK
+WHERE Date_Of_Publication >= '2014-01-01';

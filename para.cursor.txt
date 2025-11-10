@@ -1,0 +1,55 @@
+CREATE TABLE O_RollCall1 (Roll_No NUMBER PRIMARY KEY, Name VARCHAR2(50)); 
+
+ desc O_RollCall1; 
+
+INSERT INTO O_RollCall1 (Roll_No, Name) VALUES (1, 'pradip');
+INSERT INTO O_RollCall1 (Roll_No, Name) VALUES (2, 'Sandip'); 
+INSERT INTO O_RollCall1 (Roll_No, Name) VALUES (4, 'Praju'); 
+INSERT INTO O_RollCall1 (Roll_No, Name) VALUES (5, 'KAKA'); 
+
+COMMIT; 
+
+select * from O_RollCall1; 
+
+CREATE TABLE N_RollCall1 (Roll_No NUMBER PRIMARY KEY, Name VARCHAR2(50)); 
+
+desc N_RollCall1;
+
+ INSERT INTO N_RollCall1 (Roll_No, Name) VALUES (3, 'Rahul'); 
+ INSERT INTO N_RollCall1 (Roll_No, Name) VALUES (4, 'Praju');
+ INSERT INTO N_RollCall1 (Roll_No, Name) VALUES (5, 'KAKA'); 
+ INSERT INTO N_RollCall1 (Roll_No, Name) VALUES (6, 'Meena'); 
+ INSERT INTO N_RollCall1 (Roll_No, Name) VALUES (7, 'Arjun'); 
+ COMMIT;
+
+select * from N_RollCall1; 
+
+ SET SERVEROUTPUT ON;
+DECLARE 
+ CURSOR c_old(p_roll NUMBER) IS 
+ SELECT Roll_No, Name 
+ FROM O_RollCall1 
+ WHERE Roll_No = p_roll; 
+ v_roll O_RollCall1.Roll_No%TYPE; 
+ v_name O_RollCall1.Name%TYPE; 
+ BEGIN 
+ FOR rec IN (SELECT * FROM N_RollCall1) LOOP 
+
+OPEN c_old(rec.Roll_No); 
+FETCH c_old INTO v_roll, v_name; 
+IF NOT c_old%FOUND THEN 
+INSERT INTO O_RollCall1(Roll_No, Name) 
+VALUES (rec.Roll_No, rec.Name); 
+DBMS_OUTPUT.PUT_LINE('Inserted: ' || rec.Roll_No || ' - ' || rec.Name); 
+ELSE 
+DBMS_OUTPUT.PUT_LINE('Skipped (already exists): ' || rec.Roll_No || ' - ' || 
+rec.Name); 
+
+END IF; 
+ 
+CLOSE c_old; 
+ END LOOP; 
+ END; 
+ /
+
+SELECT * FROM O_RollCall1 ORDER BY Roll_No;

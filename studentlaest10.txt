@@ -1,0 +1,68 @@
+CREATE TABLE Course (
+  Course_id NUMBER PRIMARY KEY,
+  name VARCHAR2(100),
+  fee NUMBER(10,2),
+  duration VARCHAR2(50),
+  status VARCHAR2(20)
+);
+
+
+CREATE TABLE Student (
+  roll_no NUMBER PRIMARY KEY,
+  name VARCHAR2(100),
+  date_of_birth DATE,
+  course_id NUMBER,
+  FOREIGN KEY (course_id) REFERENCES Course(Course_id)
+);
+
+
+INSERT INTO Course (Course_id, name, fee, duration, status) VALUES (1, 'DBMS', 5000, '3 Months', 'offered');
+INSERT INTO Course (Course_id, name, fee, duration, status) VALUES (2, 'Java', 4000, '2 Months', 'offered');
+INSERT INTO Course (Course_id, name, fee, duration, status) VALUES (3, 'Python', 4500, '3 Months', 'offered');
+
+
+INSERT INTO Student (roll_no, name, date_of_birth, course_id) VALUES (101, 'Alice', TO_DATE('2000-01-10','YYYY-MM-DD'), 1);
+INSERT INTO Student (roll_no, name, date_of_birth, course_id) VALUES (102, 'Bob', TO_DATE('2001-02-15','YYYY-MM-DD'), 1);
+INSERT INTO Student (roll_no, name, date_of_birth, course_id) VALUES (103, 'Charlie', TO_DATE('2000-03-20','YYYY-MM-DD'), 2);
+
+COMMIT;
+
+
+CREATE OR REPLACE PROCEDURE UpdateCourseStatus AS
+  student_count NUMBER;
+BEGIN
+  FOR rec IN (SELECT Course_id, name FROM Course) LOOP
+    -- Count students in this course
+    SELECT COUNT(*) INTO student_count
+    FROM Student
+    WHERE course_id = rec.Course_id;
+
+    -- Update course status
+    IF student_count >= 10 THEN
+      UPDATE Course
+      SET status = 'offered'
+      WHERE Course_id = rec.Course_id;
+      DBMS_OUTPUT.PUT_LINE('Course ' || rec.name || ' status updated to offered');
+    ELSE
+      UPDATE Course
+      SET status = 'not offered'
+      WHERE Course_id = rec.Course_id;
+      DBMS_OUTPUT.PUT_LINE('Course ' || rec.name || ' status updated to not offered');
+    END IF;
+  END LOOP;
+
+  COMMIT;
+END;
+/
+
+
+SET SERVEROUTPUT ON;
+
+
+BEGIN
+  UpdateCourseStatus;
+END;
+/
+
+
+SELECT * FROM Course;

@@ -1,0 +1,57 @@
+CREATE TABLE BOOK(
+    Book_ISBN VARCHAR(13) PRIMARY KEY,
+    Title VARCHAR(100) NOT NULL,
+    Publisher_Name VARCHAR(200),
+    Price DECIMAL(10,2) CHECK (Price > 0),
+    Date_Of_Publication DATE,
+    Book_Copy INT
+);
+
+CREATE TABLE BOOK_AUTHOR(
+    Book_ISBN VARCHAR(13),
+    Author_Name VARCHAR(20),
+    Author_City VARCHAR(20),
+    PRIMARY KEY(Book_ISBN, Author_Name),
+    FOREIGN KEY(Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+INSERT INTO BOOK
+VALUES
+('9781234567890', 'Database Systems', 'Pearson', 550.00, '2014-01-10', 5),
+('9789876543210', 'Java Programming', 'McGraw-Hill', 750.00, '2016-05-22', 3),
+('9781112223334', 'Advanced SQL', 'OReilly', 650.00, '2013-12-01', 4);
+
+INSERT INTO BOOK_AUTHOR
+VALUES
+('9781234567890', 'Kumar', 'Pune'),
+('9781234567890', 'Sharma', 'Delhi'),
+('9789876543210', 'Karan', 'Mumbai'),
+('9781112223334', 'Ketan', 'Pune');
+
+SELECT B.Book_ISBN, B.Title, A.Author_Name
+FROM BOOK B
+INNER JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN;
+
+SELECT B.Book_ISBN, B.Title, B.Publisher_Name, A.Author_Name
+FROM BOOK B
+LEFT OUTER JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN;
+
+SELECT B.Book_ISBN, B.Title, B.Publisher_Name, A.Author_Name
+FROM BOOK B
+RIGHT OUTER JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN;
+
+SELECT DISTINCT B.Book_ISBN, B.Title
+FROM BOOK B
+JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN
+WHERE A.Author_City = 'Pune';
+
+SELECT B.Book_ISBN, B.Title
+FROM BOOK B
+JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN
+GROUP BY B.Book_ISBN, B.Title
+HAVING COUNT(A.Author_Name) > 2;

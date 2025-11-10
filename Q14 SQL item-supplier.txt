@@ -1,0 +1,70 @@
+CREATE TABLE Item (
+    item_code INT PRIMARY KEY,
+    item_name VARCHAR(50),
+    qty_in_stock INT,
+    reorder_level INT
+);
+
+CREATE TABLE Supplier (
+    supplier_code INT PRIMARY KEY,
+    supplier_name VARCHAR(50),
+    address VARCHAR(100)
+);
+
+CREATE TABLE Can_supply (
+    supplier_code INT,
+    item_code INT,
+    FOREIGN KEY (supplier_code) REFERENCES Supplier(supplier_code),
+    FOREIGN KEY (item_code) REFERENCES Item(item_code)
+);
+
+INSERT INTO Item VALUES 
+(101, 'Keyboard', 50, 10),
+(102, 'Mouse', 100, 20),
+(103, 'Monitor', 20, 5),
+(104, 'Pen Drive', 70, 15),
+(105, 'Hard Disk', 30, 5),
+(106, 'RAM', 40, 10),
+(107, 'Webcam', 25, 8),
+(108, 'Speaker', 60, 12);
+
+INSERT INTO Supplier VALUES
+(1, 'TechWorld', 'Madison'),
+(2, 'CompuStar', 'New York'),
+(3, 'GigaSupply', 'Madison'),
+(4, 'MegaTech', 'Chicago'),
+(5, 'ElectroMart', 'Boston'),
+(6, 'PC House', 'Madison'),
+(7, 'DigitalHub', 'Seattle'),
+(8, 'InfoGear', 'Madison');
+
+INSERT INTO Can_supply VALUES
+(1, 101),
+(1, 102),
+(2, 103),
+(3, 104),
+(3, 105),
+(4, 106),
+(5, 107),
+(6, 108);
+
+SELECT * FROM Item;
+SELECT * FROM Supplier;
+SELECT * FROM Can_supply;
+
+SELECT * 
+FROM Supplier
+WHERE address = 'Madison';
+
+SELECT s.supplier_code, s.supplier_name
+FROM Supplier s
+JOIN Can_supply c ON s.supplier_code = c.supplier_code
+WHERE c.item_code = 104;
+
+SELECT item_code, item_name
+FROM Item
+WHERE item_code NOT IN (
+    SELECT item_code
+    FROM Can_supply
+    WHERE supplier_code = 3
+);

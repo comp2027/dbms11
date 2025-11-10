@@ -1,0 +1,64 @@
+CREATE TABLE BOOK(
+    Book_ISBN VARCHAR(13) PRIMARY KEY,
+    Title VARCHAR(100) NOT NULL,
+    Publisher_Name VARCHAR(200),
+    Price DECIMAL(10,2) CHECK (Price > 0),
+    Date_Of_Publication DATE,
+    Book_Copy INT
+);
+
+CREATE TABLE BOOK_AUTHOR(
+    Book_ISBN VARCHAR(13),
+    Author_Name VARCHAR(20),
+    Author_City VARCHAR(20),
+    PRIMARY KEY(Book_ISBN, Author_Name),
+    FOREIGN KEY(Book_ISBN) REFERENCES BOOK(Book_ISBN)
+);
+
+INSERT INTO BOOK
+VALUES
+('9781111111111', 'Database Concepts', 'Pearson', 500.00, '2015-02-10', 12),
+('9782222222222', 'Operating Systems', 'McGraw-Hill', 650.00, '2016-07-25', 8),
+('9783333333333', 'Database System Concepts', 'Wiley', 900.00, '2014-01-05', 15);
+
+INSERT INTO BOOK_AUTHOR
+VALUES
+('9781111111111', 'Korth', 'Delhi'),
+('9781111111111', 'Abraham', 'Pune'),
+('9782222222222', 'Tanenbaum', 'New York'),
+('9783333333333', 'Korth', 'Delhi');
+
+CREATE VIEW BOOK_AUTHOR_INFO AS
+SELECT 
+    B.Book_ISBN,
+    B.Title,
+    A.Author_Name
+FROM BOOK B
+INNER JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN
+ORDER BY B.Book_ISBN ASC;
+
+CREATE INDEX idx_author_name
+ON BOOK_AUTHOR (Author_Name);
+
+CREATE TABLE Book_Auto_Increment (
+    BookID INT AUTO_INCREMENT PRIMARY KEY,
+    Book_Name VARCHAR(100)
+) AUTO_INCREMENT = 100;
+
+INSERT INTO Book_Auto_Increment (Book_Name) VALUES
+('Book One'),
+('Book Two'),
+('Book Three'),
+('Book Four'),
+('Book Five');
+
+DELETE B
+FROM BOOK B
+JOIN BOOK_AUTHOR A
+ON B.Book_ISBN = A.Book_ISBN
+WHERE A.Author_Name = 'Korth';
+
+SELECT Title
+FROM BOOK
+WHERE Book_Copy BETWEEN 10 AND 15;

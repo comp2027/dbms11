@@ -1,0 +1,61 @@
+CREATE TABLE EmployeeInfo (
+    EmpID INT PRIMARY KEY,
+    EmpFname VARCHAR(50),
+    EmpLname VARCHAR(50),
+    Department VARCHAR(50),
+    Project VARCHAR(100),
+    Address VARCHAR(100),
+    DOB DATE,
+    Gender CHAR(1)
+);
+
+CREATE TABLE EmployeePosition (
+    EmpID INT,
+    EmpPosition VARCHAR(50),
+    DateOfJoining DATE,
+    Salary DECIMAL(10,2),
+    FOREIGN KEY (EmpID) REFERENCES EmployeeInfo(EmpID)
+);
+
+INSERT INTO EmployeeInfo VALUES
+(1, 'Sam',     'Patel',   'HR',         'Recruitment',   'Pune',      '1990-05-12', 'M'),
+(2, 'Sara',    'Khan',    'Finance',    'Auditing',      'Mumbai',    '1992-07-20', 'F'),
+(3, 'Sanjay',  'Roy',     'IT',         'Development',   'Delhi',     '1988-03-15', 'M'),
+(4, 'Rohan',   'Singh',   'Sales',      'Field Sales',   'Pune',      '1991-10-08', 'M'),
+(5, 'Shivani', 'Desai',   'HR',         'HR Ops',        'Mumbai',    '1993-11-25', 'F'),
+(6, 'Anil',    'Kapoor',  'IT',         'Testing',       'Pune',      '1985-01-17', 'M'),
+(7, 'Sonam',   'Mehta',   'IT',         'Support',       'Delhi',     '1994-12-02', 'F'),
+(8, 'Kunal',   'Verma',   'Finance',    'Budgeting',     'Chennai',   '1989-09-22', 'M');
+
+INSERT INTO EmployeePosition VALUES
+(1, 'HR Executive',         '2016-04-10', 60000),
+(2, 'Accountant',           '2017-05-15', 45000),
+(3, 'Senior Developer',     '2015-02-20', 90000),
+(4, 'Sales Manager',        '2018-11-01', 50000),
+(5, 'HR Manager',           '2016-08-12', 75000),
+(6, 'Tester',               '2014-01-10', 40000),
+(7, 'Tech Support',         '2019-07-18', 52000),
+(8, 'Financial Analyst',    '2013-06-11', 100000);
+
+SELECT * FROM EmployeeInfo;
+SELECT * FROM EmployeePosition;
+
+SELECT UPPER(EmpFname) AS EmpName
+FROM EmployeeInfo;
+
+SELECT COUNT(*) AS NumberOfEmployees
+FROM EmployeeInfo
+WHERE Department = 'HR';
+
+SELECT EI.EmpID, EI.EmpFname, EI.EmpLname, EP.Salary
+FROM EmployeeInfo EI
+JOIN EmployeePosition EP ON EI.EmpID = EP.EmpID
+WHERE EP.Salary BETWEEN 50000 AND 100000;
+
+SELECT EmpFname, EmpLname
+FROM EmployeeInfo
+WHERE EmpFname LIKE 'S%';
+
+SELECT *
+FROM EmployeeInfo
+LIMIT N;

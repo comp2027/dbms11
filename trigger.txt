@@ -1,0 +1,70 @@
+CREATE TABLE Library ( Book_ID NUMBER PRIMARY KEY,Title VARCHAR2(100),Author 
+VARCHAR2(100), Price NUMBER); 
+
+INSERT INTO Library (Book_ID, Title, Author, Price) VALUES (1, 'DBMS Concepts', 'NN', 
+500); 
+
+ INSERT INTO Library (Book_ID, Title, Author, Price) VALUES (2, 'SQL Guide', 'DATE', 
+450);
+
+INSERT INTO Library (Book_ID, Title, Author, Price) VALUES (3, 'Operating Systems', 
+'Swastik', 600);
+
+COMMIT;
+ 
+ Select * from library; 
+
+CREATE TABLE Library_Audit (
+  Audit_ID NUMBER PRIMARY KEY,
+  Book_ID NUMBER,
+  Title VARCHAR2(100),
+  Author VARCHAR2(100),
+  Price NUMBER,
+  Action VARCHAR2(10),
+  Action_Date DATE
+);
+
+ ED 
+
+ CREATE OR REPLACE TRIGGER trg_library_audit 
+ AFTER UPDATE OR DELETE ON Library 
+ FOR EACH ROW 
+ BEGIN 
+ IF UPDATING THEN 
+ INSERT INTO Library_Audit (Book_ID, Title, Author, Price, Action, 
+Action_DATE) 
+ VALUES (:OLD.Book_ID, :OLD.Title, :OLD.Author, :OLD.Price, 'UPDATE', SYSDATE); 
+ ELSIF DELETING THEN 
+ INSERT INTO Library_Audit (Book_ID, Title, Author, Price, Action, Action_DATE) 
+ VALUES (:OLD.Book_ID, :OLD.Title, :OLD.Author, :OLD.Price, 'DELETE', SYSDATE); 
+ END IF; 
+* END; 
+/
+
+ ED 
+
+ CREATE OR REPLACE TRIGGER trg_stmt_upDATE_library 
+ AFTER UPDATE ON Library 
+ BEGIN 
+ DBMS_OUTPUT.PUT_LINE('UPDATE statement executed on Library table'); 
+* END; 
+ / 
+
+ED
+
+ CREATE OR REPLACE TRIGGER trg_stmt_delete_library 
+ AFTER DELETE ON Library 
+ BEGIN 
+ DBMS_OUTPUT.PUT_LINE('DELETE statement executed on Library table'); 
+* END; 
+ / 
+
+upDATE library set price = 550 where book_id = 1; 
+
+delete from library where book_id = 2; 
+
+select * from library_audit; 
+
+
+/ 
+ 

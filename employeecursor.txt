@@ -1,0 +1,40 @@
+CREATE TABLE EmployeePosition ( 
+EmpID INT PRIMARY KEY, 
+EmpPosition VARCHAR(50), 
+DateOfJoining DATE, 
+Salary NUMBER(10, 2) 
+); 
+
+INSERT INTO EmployeePosition (EmpID, EmpPosition, DateOfJoining, Salary)
+VALUES (1, 'Manager', TO_DATE('2015-06-15', 'YYYY-MM-DD'), 9500);
+
+INSERT INTO EmployeePosition (EmpID, EmpPosition, DateOfJoining, Salary)
+VALUES (2, 'Analyst', TO_DATE('2018-09-10', 'YYYY-MM-DD'), 10500);
+
+INSERT INTO EmployeePosition (EmpID, EmpPosition, DateOfJoining, Salary)
+VALUES (3, 'Developer', TO_DATE('2019-01-20', 'YYYY-MM-DD'), 8000);
+
+INSERT INTO EmployeePosition (EmpID, EmpPosition, DateOfJoining, Salary)
+VALUES (4, 'Clerk', TO_DATE('2021-04-25', 'YYYY-MM-DD'), 7000);
+
+INSERT INTO EmployeePosition (EmpID, EmpPosition, DateOfJoining, Salary)
+VALUES (5, 'Assistant', TO_DATE('2020-11-15', 'YYYY-MM-DD'), 12000);
+
+COMMIT;
+
+SET SERVEROUTPUT ON; 
+DECLARE 
+v_rows_updated NUMBER; 
+BEGIN 
+UPDATE EmployeePosition 
+SET Salary = Salary * 1.1 
+WHERE Salary < 10000; 
+v_rows_updated := SQL%ROWCOUNT; 
+IF SQL%FOUND THEN 
+DBMS_OUTPUT.PUT_LINE(v_rows_updated || ' employee(s) had their salary increased by 
+10%.'); 
+ELSE 
+DBMS_OUTPUT.PUT_LINE('No employees found with a salary less than Rs. 10000.'); 
+END IF; 
+END; 
+/ 

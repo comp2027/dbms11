@@ -1,0 +1,52 @@
+CREATE TABLE College_info (
+    college_code INT PRIMARY KEY,
+    college_name VARCHAR(100),
+    address VARCHAR(255)
+);
+
+CREATE TABLE Faculty_info (
+    faculty_code INT PRIMARY KEY,
+    college_code INT,
+    faculty_name VARCHAR(100),
+    qualification VARCHAR(100),
+    experience_years INT,
+    address VARCHAR(255),
+    FOREIGN KEY (college_code) REFERENCES College_info(college_code)
+);
+
+INSERT INTO College_info VALUES
+(1, 'MIT College', 'Pune'),
+(2, 'COEP', 'Pune'),
+(3, 'VIT College', 'Mumbai'),
+(4, 'DY Patil College', 'Navi Mumbai'),
+(5, 'Sinhgad College', 'Pune'),
+(6, 'IIT Bombay', 'Mumbai'),
+(7, 'Bharti Vidyapeeth', 'Pune'),
+(8, 'SP College', 'Pune');
+
+INSERT INTO Faculty_info VALUES
+(101, 1, 'Dr. Mehta', 'M.Tech', 12, 'Pune'),
+(102, 2, 'Dr. Sharma', 'PhD', 15, 'Mumbai'),
+(103, 3, 'Prof. Patil', 'M.Tech', 8, 'Pune'),
+(104, 4, 'Dr. Rao', 'M.Sc', 10, 'Navi Mumbai'),
+(105, 5, 'Dr. Kaur', 'M.Tech', 10, 'Pune'),
+(106, 6, 'Dr. Gupta', 'B.Tech', 5, 'Mumbai'),
+(107, 7, 'Dr. Nanda', 'M.Tech', 18, 'Pune'),
+(108, 8, 'Dr. Sen', 'PhD', 20, 'Pune');
+
+SELECT * FROM College_info;
+SELECT * FROM Faculty_info;
+
+SELECT *
+FROM Faculty_info
+WHERE address = 'Pune';
+
+SELECT *
+FROM Faculty_info
+WHERE experience_years >= 10
+  AND qualification = 'M.Tech';
+
+SELECT *
+FROM Faculty_info
+WHERE experience_years >= 10
+  AND qualification <> 'M.Tech';
