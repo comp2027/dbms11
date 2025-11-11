@@ -1,0 +1,51 @@
+CREATE DATABASE student_db;
+USE student_db;
+
+CREATE TABLE Student (
+    roll_no INT PRIMARY KEY,
+    marks INT,
+    category VARCHAR(20),
+    district VARCHAR(50),
+    state VARCHAR(50)
+);
+
+CREATE TABLE Student_rank (
+    roll_no INT PRIMARY KEY,
+    marks INT,
+    rank INT,
+    FOREIGN KEY (roll_no) REFERENCES Student(roll_no)
+);
+
+INSERT INTO Student VALUES
+(101, 450, 'OBC', 'Chennai', 'Tamil Nadu'),
+(102, 480, 'SC', 'Madurai', 'Tamil Nadu'),
+(103, 420, 'ST', 'Vijayawada', 'Andhra Pradesh'),
+(104, 390, 'OBC', 'Guntur', 'Andhra Pradesh'),
+(105, 500, 'GENERAL', 'Coimbatore', 'Tamil Nadu');
+
+INSERT INTO Student_rank VALUES
+(101, 450, 120),
+(102, 480, 90),
+(103, 420, 150),
+(104, 390, 210),
+(105, 500, 50);
+
+SELECT * FROM Student;
+
+SELECT * FROM Student_rank;
+
+SELECT s.roll_no, s.marks, s.category, s.district, s.state, r.rank
+FROM Student s
+JOIN Student_rank r ON s.roll_no = r.roll_no;
+
+SELECT s.roll_no, s.marks, r.rank, s.state
+FROM Student s
+JOIN Student_rank r ON s.roll_no = r.roll_no
+WHERE s.state = 'Tamil Nadu' AND r.rank > 100;
+
+SELECT s.roll_no, s.category, s.state, r.rank
+FROM Student s
+JOIN Student_rank r ON s.roll_no = r.roll_no
+WHERE s.state = 'Andhra Pradesh'
+  AND s.category = 'OBC'
+  AND r.rank > 100;
